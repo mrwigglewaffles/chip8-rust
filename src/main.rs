@@ -5,6 +5,7 @@ extern crate sdl2;
 use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 use sdl2::pixels::Color;
+use std::io;
 // use std::time::Duration;
 
 use std::fs;
@@ -22,7 +23,6 @@ pub struct Memory {
     st: u8,
     buttons: [bool; 16],
 }
-
 
 impl Memory {
     fn new() -> Self {
@@ -433,8 +433,18 @@ impl display_control {
 }
 
 fn main() {
+    //reads input
+    println!("type name of the rom");
+    let mut rom_name = String::new();
+    io::stdin()
+        .read_line(&mut rom_name)
+        .expect("failed to read input");
     let mut mem = Memory::new();
-    mem.set_ram("chip8-test-suite.ch8".to_string());
+
+    //removes the newline char
+    rom_name.pop();
+
+    mem.set_ram(rom_name);
     let mut my_canvas = display_control::new();
     my_canvas.present();
     let mut event_pump = my_canvas.SDL.event_pump().unwrap();
